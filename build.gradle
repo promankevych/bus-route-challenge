@@ -1,0 +1,53 @@
+group 'com.goeuro'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE'
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springBootVersion = '1.5.6.RELEASE'
+    lombokVersion = '1.16.16'
+    ehcacheVersion = '3.3.1'
+    guavaVersion = '22.0'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+        exclude module: "spring-boot-starter-logging"
+    }
+    compile("org.springframework.boot:spring-boot-starter-cache:$springBootVersion") {
+        exclude module: "spring-boot-starter-logging"
+    }
+    compile("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion") {
+        exclude module: "spring-boot-starter-logging"
+    }
+    compile "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"
+
+    compile "org.ehcache:ehcache:$ehcacheVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springBootVersion"
+}
+
+springBoot {
+    executable = true
+}

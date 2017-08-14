@@ -1,0 +1,20 @@
+server:
+  context-path: /
+  display-name: Bus Route Challenge
+  port: 8088
+  servlet-path: /api/*
+
+bus:
+  route:
+    limit: 100000
+    station:
+      limit:
+        min: 2
+        max: 1000
+      number:
+        limit: 1000000
+
+spring:
+  cache:
+    ehcache:
+      config: classpath:ehcache.xml
