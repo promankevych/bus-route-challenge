@@ -1,8 +1,8 @@
 package com.goeuro.service.watcher;
 
-import com.goeuro.BusRouteApplication;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
 import java.nio.file.*;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -18,10 +18,10 @@ public class FileWatcher extends Thread {
     private OnChangeAction onChange;
 
     public FileWatcher(String dataPath, OnChangeAction onChange) {
-        this.setName(BusRouteApplication.WATCH_THREAD_NAME);
+        this.setName("FileWatcher");
         this.dataPath = dataPath;
         this.path = Paths.get(dataPath).getParent();
-        this.filename = dataPath.replace(path.toString(), "");
+        this.filename = dataPath.replace(path.toString() + File.separator, "");
         this.onChange = onChange;
     }
 
@@ -76,6 +76,7 @@ public class FileWatcher extends Thread {
 
     private boolean targetFileChanged(WatchEvent<?> event) {
         WatchEvent.Kind<?> kind = event.kind();
+        @SuppressWarnings("unchecked")
         WatchEvent<Path> ev = (WatchEvent<Path>) event;
         return StandardWatchEventKinds.ENTRY_MODIFY.equals(kind) && this.filename.equals(ev.context().toString());
     }

@@ -20,6 +20,14 @@ public class BusRouteLoader implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        String dataPath = processDataPath(args);
+
+        feedRoutesData();
+
+        startFileWatcher(dataPath);
+    }
+
+    private String processDataPath(String... args) {
         String dataPath = args.length > 0 ? args[0] : null;
 
         if (StringUtils.isEmpty(dataPath)) {
@@ -27,14 +35,19 @@ public class BusRouteLoader implements CommandLineRunner {
         }
 
         busRouteHolder.setDataPath(dataPath);
+        return dataPath;
+    }
 
+    private void feedRoutesData() {
         List<BusRoute> busRoutes = busRouteHolder.getRoutes();
         if (!CollectionUtils.isEmpty(busRoutes)) {
             log.info("Successfully put routes into cache");
         } else {
             throw new IllegalArgumentException("Something went wrong during parsing bus routes data file. Please check file content or location!");
         }
+    }
 
+    private void startFileWatcher(String dataPath) {
         FileWatcher watcher = new FileWatcher(dataPath, path -> busRouteHolder.setDataPath(dataPath));
         watcher.start();
     }

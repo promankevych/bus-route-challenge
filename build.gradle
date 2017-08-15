@@ -35,11 +35,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-cache:$springBootVersion") {
         exclude module: "spring-boot-starter-logging"
     }
-    compile("org.springframework.boot:spring-boot-starter-actuator:$springBootVersion") {
-        exclude module: "spring-boot-starter-logging"
-    }
     compile "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion"
-    compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"
 
     compile "org.ehcache:ehcache:$ehcacheVersion"
     compile "com.google.guava:guava:$guavaVersion"

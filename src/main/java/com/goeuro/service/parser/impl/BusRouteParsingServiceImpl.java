@@ -37,11 +37,7 @@ public class BusRouteParsingServiceImpl implements BusRouteParsingService {
             Integer routesLimit = getRoutesLimit(path);
 
             if (routesLimitNotExceeded(routesLimit)) {
-                busRoutes = stream.limit(routesLimit + 1).skip(1)
-                        .map(this::convertToRoute)
-                        .filter(Objects::nonNull)
-                        .filter(distinctByKey(BusRoute::getRouteId))
-                        .collect(Collectors.toList());
+                busRoutes = parseRoutes(stream, routesLimit);
             } else {
                 log.info("Routes limit from file exceeds limit from configs {} > {}", routesLimit, busRouteLimit);
             }
@@ -50,6 +46,14 @@ public class BusRouteParsingServiceImpl implements BusRouteParsingService {
         }
 
         return busRoutes;
+    }
+
+    private List<BusRoute> parseRoutes(Stream<String> stream, Integer routesLimit) {
+        return stream.limit(routesLimit + 1).skip(1)
+                .map(this::convertToRoute)
+                .filter(Objects::nonNull)
+                .filter(distinctByKey(BusRoute::getRouteId))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -71,6 +75,10 @@ public class BusRouteParsingServiceImpl implements BusRouteParsingService {
             return null;
         }
 
+        return parseRoute(rowItems);
+    }
+
+    private BusRoute parseRoute(List<String> rowItems) {
         Integer routeId = null;
         Set<Integer> stationIds = new HashSet<>();
         for (String item : rowItems) {
